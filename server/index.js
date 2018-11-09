@@ -14,6 +14,7 @@ app.all('/*', function(req, res, next) {
 });
 
 app.get('/description', function(req, res) {
+	console.log(req.query.id);
 	model.getListing(req.query.id)
 		.then((results) => {
 			res.send(results[0]);

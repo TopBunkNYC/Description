@@ -1,6 +1,7 @@
 const db = require('../../database/index.js');
 
 const getListing = (id) => {
+  console.log(db('topbunk.listings').where({id: id}).toString());
   return db('topbunk.listings').where({id: id})
     .catch((err) => console.log(err));
 };
