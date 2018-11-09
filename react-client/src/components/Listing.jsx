@@ -34,7 +34,6 @@ class Listing extends React.Component {
 
 
   render () {
-  console.log("T", this.props.listing)
     return (
 	    <div style={styles.container}>
 	      <div style={styles.roomType}>
@@ -43,13 +42,13 @@ class Listing extends React.Component {
 
 	    	<div style={styles.cityDecalContainter}>
 		    	<div style={styles.roomTypeDetails}>
-		      		<h1>{this.props.listing.room_type_details} </h1>
+		      		<h1>{this.props.listing.room_details} </h1>
 		      </div>
 					<div style={styles.iconeNameContainer}>
       			<div style={styles.avatar}>
-      				<img style={styles.avatar} src={this.props.listing.avatar/>
+      				<img style={styles.avatar} src={this.props.listing.avatar}/>
       			</div>
-      			<div style={styles.nameText}>{this.props.listing.user_name}</div>
+      			<div style={styles.nameText}>{this.props.listing.username}</div>
       		</div>
 	    	</div>
 		    	<div style={styles.city}>
@@ -59,13 +58,13 @@ class Listing extends React.Component {
 	    	<div style={styles.iconContainter}>
     			<div style={styles.iconContainer}>
     				<img style={styles.imgIcon} src="./guests.png" />
-    					<p style={styles.sampleCont}>4 Guests</p>
+    					<p style={styles.sampleCont}>{this.props.listing.num_guests} {this.props.listing.num_guests === 1 ? 'Guest' : 'Guests'}</p>
     				<img style={styles.imgIcon} src="bedrooms.png" />
-    					<p style={styles.sampleCont}>1 Bedroom</p>
+    					<p style={styles.sampleCont}>{this.props.listing.num_bedrooms} {this.props.listing.num_bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}</p>
     				<img style={styles.imgIcon} src="./beds.png" />
-    					<p style={styles.sampleCont}>2 Beds</p>
+    					<p style={styles.sampleCont}>{this.props.listing.num_beds} {this.props.listing.num_beds === 1 ? 'Bed' : 'Beds'}</p>
     				<img style={styles.imgIcon} src="./bath.png" />
-    					<p style={styles.sampleCont}>1 Bath</p>
+    					<p style={styles.sampleCont}>{this.props.listing.num_baths} {this.props.listing.num_baths === 1 ? 'Bath' : 'Baths'}</p>
     			</div>
 	    	</div>
 
@@ -99,19 +98,19 @@ class Listing extends React.Component {
 	      		<p>Guest access</p>
 	    	</div>
 	    	<div style={styles.listing_details}>
-	      		<p>{this.props.listing.guest_access_details}</p>
+	      		<p>{this.props.listing.guest_access}</p>
 	    	</div>	    	
 	    	<div style={styles.space}>
 	      		<p>Interaction with guests</p>
 	    	</div>
 	    	<div style={styles.listing_details}>
-	      		<p>{this.props.listing.interaction_guests_details}</p>
+	      		<p>{this.props.listing.interaction}</p>
 	    	</div>
 	    	<div style={styles.space}>
 	      		<p>Other things to note</p>
 	    	</div>
 	    	<div style={styles.listing_details}>
-	      		<p>{this.props.listing.other_details}</p>
+	      		<p>{this.props.listing.other}</p>
 	    	</div>
         </ReactTextCollapse>
         <br/>

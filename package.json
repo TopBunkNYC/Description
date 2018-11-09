@@ -10,8 +10,8 @@
     "listpm2": "pm2 list",
     "pm2server": "pm2 show server",
     "pm2stop": "pm2 stop 0",
-    "seed mysql": "mysql -u root -p < ./database/mysqlSchema.sql && node ./database/mysqlBuild.js",
-    "seed postgres": "psql topbunk < ./database/postgresSchema.sql && node ./database/postgresBuild.js"
+    "seed-mysql": "mysql -u root -p < ./database/mysqlSchema.sql && node ./database/mysqlBuild.js",
+    "seed-postgres": "psql topbunk < ./database/postgresSchema.sql && node ./database/build.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
     "faker": "^4.1.0",
     "file-loader": "^2.0.0",
     "image-webpack-loader": "^4.4.0",
+    "knex": "^0.15.2",
     "mdbreact": "^4.8.2",
     "module-example": "^1.0.0",
     "mysql": "^2.13.0",

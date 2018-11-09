@@ -13,7 +13,7 @@ class App extends React.Component {
 
   componentDidMount() {   
     const port = process.env.PORT || 4001;
-    var ID = window.location.href.slice(-3);
+    var ID = window.location.href.split('?')[1];
     
     if(!(window.location.href === `http://localhost:${port}/listing`) ){
       axios.get('/description', {
@@ -22,9 +22,8 @@ class App extends React.Component {
         }
       })
       .then(({data}) => {
-        console.log("Axios", data)
         this.setState({
-            listing: data[0]
+            listing: data
         })
       })
     }
