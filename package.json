@@ -6,11 +6,6 @@
   "scripts": {
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js",
-    "start-aws": "pm2 start server/index.js",
-    "listpm2": "pm2 list",
-    "pm2server": "pm2 show server",
-    "pm2stop": "pm2 stop 0",
-    "seed-mysql": "mysql -u root -p < ./database/mysqlSchema.sql && node ./database/mysqlBuild.js",
     "build-csv": "node ./database/stream.js",
     "seed-postgres": "psql topbunk < ./database/postgresSchema.sql"
   },

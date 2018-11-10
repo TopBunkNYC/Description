@@ -21,14 +21,14 @@ const paragraphs = () => {
 
 // csv builder
 
-var stream = fs.createWriteStream('data2.csv');
+var stream = fs.createWriteStream('data.csv');
 
 const location = faker.address.city();
 const createData = (length) => {
   const arr = [];
   for (let x = 0; x < length; x++) {
     arr.push(
-      `${randomize(roomType)};${faker.name.findName()};${createListing(location)};${location};${paragraphs()};${paragraphs()};${paragraphs()};${paragraphs()};${paragraphs()};${faker.image.avatar()};${randomize([1, 2, 3, 4, 5, 6, 7, 8])};${randomize([1, 2, 3])};${randomize([1, 2, 3, 4, 5, 6])};${randomize([1, 2])}`
+      `${randomize(roomType)}\t${faker.name.findName()}\t${createListing(location)}\t${location}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${faker.image.avatar()}\t${randomize([1, 2, 3, 4, 5, 6, 7, 8])}\t${randomize([1, 2, 3])}\t${randomize([1, 2, 3, 4, 5, 6])}\t${randomize([1, 2])}`
     );
   }
   return arr;
