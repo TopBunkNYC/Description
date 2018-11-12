@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
+const autoinc = require('mongoose-sequence')(mongoose);
 
 mongoose.connect('mongodb://localhost:27017/topbunk');
 
-let descriptionSchema = mongoose.Schema({
-  id: mongoose.Schema.Types.ObjectId,
+let listingSchema = mongoose.Schema({
 	room_type: String,
 	username: String,
 	room_details: String,
@@ -19,7 +19,8 @@ let descriptionSchema = mongoose.Schema({
 	num_beds: Number,
 	num_baths: Number
 });
+listingSchema.plugin(autoinc, {inc_field: 'id', id: 'listings'});
 
-let Description = mongoose.model('description', descriptionSchema);
+let Listing = mongoose.model('listing', listingSchema);
 
-module.exports = Description;
+module.exports = Listing;

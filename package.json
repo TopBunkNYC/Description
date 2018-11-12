@@ -7,7 +7,8 @@
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js",
     "build-csv": "node ./database/stream.js",
-    "seed-postgres": "psql topbunk < ./database/postgresSchema.sql"
+    "seed-postgres": "psql topbunk < ./database/postgresSchema.sql",
+    "seed-mongo": "./database/mongoInit.sh"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "mdbreact": "^4.8.2",
     "module-example": "^1.0.0",
     "mongoose": "^5.3.10",
+    "mongoose-sequence": "^4.0.1",
     "mysql": "^2.13.0",
     "pg": "^7.6.1",
     "puppeteer": "^1.9.0",
