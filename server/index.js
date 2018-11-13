@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const model = require('./model/model.js');
+// const model = require('./model/postgresModel.js');
+const model = require('./model/mongoModel.js');
 const path = require('path');
 const port = process.env.PORT || 7000;
 
