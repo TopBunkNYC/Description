@@ -1,5 +1,5 @@
 const faker = require('faker');
-const knex = require('../database/index.js');
+const fs = require('fs');
 
 const randomize = (array) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -15,59 +15,45 @@ const createListing = (location) => {
   return `${randomize(adj)} ${randomize(noun)} ${randomize(area)} ${location}`;
 };
 
-(async () => {
-  let time = new Date().getTime() / 1000;
-  for (let i = 0; i < 10000; i++) {
-    let arr = [];
-    for (let x = 0; x < 1000; x++) {
-      const location = faker.address.city();
-      arr.push({
-        room_type: randomize(roomType),
-        username: faker.name.findName(),
-        room_details: createListing(location),
-        city: location,
-        city_details: faker.lorem.paragraphs(),
-        listing_details: faker.lorem.paragraphs(),
-        guest_access: faker.lorem.paragraphs(),
-        interaction: faker.lorem.paragraphs(),
-        other: faker.lorem.paragraphs(),
-        avatar: faker.image.avatar(),
-        num_guests: randomize([1, 2, 3, 4, 5, 6, 7, 8]),
-        num_bedrooms: randomize([1, 2, 3]),
-        num_beds: randomize([1, 2, 3, 4, 5, 6]),
-        num_baths: randomize([1, 2])
-      })
-    }
-    // await knex.batchInsert('topbunk.listings', arr, 500);
-    await Promise.all([knex.batchInsert('topbunk.listings', arr.slice(0, 500), 500),
-      knex.batchInsert('topbunk.listings', arr.slice(500, 1000), 500)]);
-    console.log(i+1);
-  }
-  knex.raw('ALTER TABLE topbunk.listings ADD PRIMARY KEY (id);')
-  console.log(new Date().getTime() / 1000 - time);
-  knex.destroy();
-})();
+const paragraphs = () => {
+  return faker.lorem.paragraph() + ' ' + faker.lorem.paragraph();
+};
 
-// (async () => {
-//   let time = new Date().getTime() / 1000;
-//   for (let i = 0; i < 200; i++) {
-//     let arr = [];
-//     for (let x = 0; x < 500; x++) {
-//       const location = faker.address.city();
-//       let vars = ([`'${randomize(roomType)}'`, `'${faker.name.findName().replace(/'/g, "\'\'")}'`, `'${createListing(location).replace(/'/g, "\'\'")}'`, `'${location.replace(/'/g, "\'\'")}'`, `'${faker.lorem.paragraphs()}'`,
-//         `'${faker.lorem.paragraphs()}'`, `'${faker.lorem.paragraphs()}'`, `'${faker.lorem.paragraphs()}'`, `'${faker.lorem.paragraphs()}'`, 
-//           `'${faker.image.avatar()}'`, randomize([1, 2, 3, 4, 5, 6, 7, 8]), randomize([1, 2, 3]), 
-//           randomize([1, 2, 3, 4, 5, 6]), randomize([1, 2])]).join(', ');
-//       arr.push('(' + vars + ')');
-//     }
-//     //console.log(`TEXT: insert into topbunk.listings (room_type, username, room_details, 
-//     //   city, city_details, listing_details, guest_access, interaction,
-//     //   other, avatar, num_guests, num_bedrooms, num_beds, num_baths) values ${arr.join(', ')}`)
-//     await knex.raw(`insert into topbunk.listings (room_type, username, room_details, 
-//       city, city_details, listing_details, guest_access, interaction,
-//       other, avatar, num_guests, num_bedrooms, num_beds, num_baths) values ${arr.join(', ')}`);
-//     console.log(i+1);
-//   }
-//   console.log(new Date().getTime() / 1000 - time);
-//   knex.destroy();
-// })();
+// csv builder
+
+var stream = fs.createWriteStream('data.csv');
+var index = 1;
+
+const location = faker.address.city();
+const createData = (length) => {
+  const arr = [];
+  for (let x = 0; x < length; x++) {
+    arr.push(
+      `${index}\t${randomize(roomType)}\t${faker.name.findName()}\t${createListing(location)}\t${location}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${faker.image.avatar()}\t${randomize([1, 2, 3, 4, 5, 6, 7, 8])}\t${randomize([1, 2, 3])}\t${randomize([1, 2, 3, 4, 5, 6])}\t${randomize([1, 2])}`
+    );
+    index++;
+  }
+  return arr;
+};
+
+const writeStream = (writer, len) => {
+  const time1 = new Date().getTime();
+  var i = len;
+  const write = () => {
+    let ok = true;
+    while (i >= 0 && ok) {
+      const time2 = new Date().getTime();
+      const data = createData(500).join('\n') + '\n';
+      ok = writer.write(data);
+      const time3 = new Date().getTime();
+      console.log(`${i}: Total time: ${(time3 - time1) / 1000}, Batch time: ${(time3 - time2) / 1000}`);
+      i--;
+    }
+    if (i > 0) {
+      writer.once('drain', write);
+    }
+  };
+  write();
+};
+
+writeStream(stream, 20000);

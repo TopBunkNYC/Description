@@ -1,8 +1,8 @@
-const db = require('../../database/index.js');
+const db = require('../../database/indexPostgres.js');
 
 const getListing = (id) => {
-  console.log(db('topbunk.listings').where({id: id}).toString());
   return db('topbunk.listings').where({id: id})
+    .then((results) => results[0])
     .catch((err) => console.log(err));
 };
 

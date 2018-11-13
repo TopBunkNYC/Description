@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const model = require('./model/model.js');
+// const model = require('./model/postgresModel.js');
+const model = require('./model/mongoModel.js');
 const path = require('path');
 const port = process.env.PORT || 7000;
 
@@ -14,10 +15,9 @@ app.all('/*', function(req, res, next) {
 });
 
 app.get('/description', function(req, res) {
-	console.log(req.query.id);
 	model.getListing(req.query.id)
 		.then((results) => {
-			res.send(results[0]);
+			res.send(results);
 		})
 		.catch((err) => console.log(err));
 });

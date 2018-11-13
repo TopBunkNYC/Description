@@ -21,3 +21,7 @@ CREATE TABLE topbunk.listings (
 	num_beds INTEGER,
 	num_baths INTEGER
 );
+
+\copy topbunk.listings (id, room_type, username, room_details, city, city_details, listing_details, guest_access, interaction, other, avatar, num_guests, num_bedrooms, num_beds, num_baths) from 'data.csv' with delimiter as E'\t' CSV;
+
+ALTER TABLE topbunk.listings ADD PRIMARY KEY (id);
