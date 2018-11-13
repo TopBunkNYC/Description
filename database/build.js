@@ -1,6 +1,5 @@
 const faker = require('faker');
-const knex = require('./indexPostgres.js');
-const Description = require('./indexMongo.js');
+const fs = require('fs');
 
 const randomize = (array) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -16,59 +15,45 @@ const createListing = (location) => {
   return `${randomize(adj)} ${randomize(noun)} ${randomize(area)} ${location}`;
 };
 
-// Mongo Build
+const paragraphs = () => {
+  return faker.lorem.paragraph() + ' ' + faker.lorem.paragraph();
+};
+
+// csv builder
+
+var stream = fs.createWriteStream('data.csv');
+var index = 1;
 
 const location = faker.address.city();
-let newDescription = new Description({
-  id: '1',
-	room_type: randomize(roomType),
-	username: faker.name.findName(),
-	room_details: createListing(location),
-	city: location,
-	city_details: faker.lorem.paragraphs(),
-	listing_details: faker.lorem.paragraphs(),
-	guest_access: faker.lorem.paragraphs(),
-	interaction: faker.lorem.paragraphs(),
-	other: faker.lorem.paragraphs(),
-	avatar: faker.image.avatar(),
-	num_guests: randomize([1, 2, 3, 4, 5, 6, 7, 8]),
-	num_bedrooms: randomize([1, 2, 3]),
-	num_beds: randomize([1, 2, 3, 4, 5, 6]),
-	num_baths: randomize([1, 2])
-});
-newDescription.save();
+const createData = (length) => {
+  const arr = [];
+  for (let x = 0; x < length; x++) {
+    arr.push(
+      `${index}\t${randomize(roomType)}\t${faker.name.findName()}\t${createListing(location)}\t${location}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${faker.image.avatar()}\t${randomize([1, 2, 3, 4, 5, 6, 7, 8])}\t${randomize([1, 2, 3])}\t${randomize([1, 2, 3, 4, 5, 6])}\t${randomize([1, 2])}`
+    );
+    index++;
+  }
+  return arr;
+};
 
-// Postgres Build
+const writeStream = (writer, len) => {
+  const time1 = new Date().getTime();
+  var i = len;
+  const write = () => {
+    let ok = true;
+    while (i >= 0 && ok) {
+      const time2 = new Date().getTime();
+      const data = createData(500).join('\n') + '\n';
+      ok = writer.write(data);
+      const time3 = new Date().getTime();
+      console.log(`${i}: Total time: ${(time3 - time1) / 1000}, Batch time: ${(time3 - time2) / 1000}`);
+      i--;
+    }
+    if (i > 0) {
+      writer.once('drain', write);
+    }
+  };
+  write();
+};
 
-// (async () => {
-//   let time = new Date().getTime() / 1000;
-//   for (let i = 0; i < 10000; i++) {
-//     let arr = [];
-//     for (let x = 0; x < 1000; x++) {
-//       const location = faker.address.city();
-//       arr.push({
-//         room_type: randomize(roomType),
-//         username: faker.name.findName(),
-//         room_details: createListing(location),
-//         city: location,
-//         city_details: faker.lorem.paragraphs(),
-//         listing_details: faker.lorem.paragraphs(),
-//         guest_access: faker.lorem.paragraphs(),
-//         interaction: faker.lorem.paragraphs(),
-//         other: faker.lorem.paragraphs(),
-//         avatar: faker.image.avatar(),
-//         num_guests: randomize([1, 2, 3, 4, 5, 6, 7, 8]),
-//         num_bedrooms: randomize([1, 2, 3]),
-//         num_beds: randomize([1, 2, 3, 4, 5, 6]),
-//         num_baths: randomize([1, 2])
-//       })
-//     }
-//     // await knex.batchInsert('topbunk.listings', arr, 500);
-//     await Promise.all([knex.batchInsert('topbunk.listings', arr.slice(0, 500), 500),
-//       knex.batchInsert('topbunk.listings', arr.slice(500, 1000), 500)]);
-//     console.log(i+1);
-//   }
-//   knex.raw('ALTER TABLE topbunk.listings ADD PRIMARY KEY (id);')
-//   console.log(new Date().getTime() / 1000 - time);
-//   knex.destroy();
-// })();
+writeStream(stream, 20000);

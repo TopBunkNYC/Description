@@ -44,7 +44,6 @@ const deleteListing = (id) => {
 
 const updateListing = (data) => {
   let {id, ...changes} = data;
-  console.log(id, changes)
   return db.findOneAndUpdate({id: id}, changes).exec()
     .catch((err) => console.log(err));
 };
