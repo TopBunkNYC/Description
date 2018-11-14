@@ -22,7 +22,14 @@ const updateListing = (data) => {
     .catch((err) => console.log(err));
 };
 
+const resetCounter = (number) => {
+  return db.raw('select setval(?, ?, false)', ['topbunk.listings_id_seq', number])
+    .catch((err) => console.log(err));
+};
+
 module.exports.getListing = getListing;
 module.exports.addListing = addListing;
 module.exports.deleteListing = deleteListing;
 module.exports.updateListing = updateListing;
+module.exports.resetCounter = resetCounter;
+module.exports.connection = db;
