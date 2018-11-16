@@ -2,8 +2,6 @@ const puppeteer = require("puppeteer");
 const path = require('path');
 const faker = require('faker');
 
-const url = 'http://localhost:7000';
-
 const randomize = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
@@ -41,17 +39,31 @@ const createData = (location) => {
   };
 }
 
-const loops = 100;
+const loops = 1000;
+let postgres;
+let mongo;
 
 describe('Test MongoDB', () => {
-  test('read / write speeds', async () => {
-    const mongo = require('../server/model/mongoModel.js');
+  beforeAll(() => {
+    mongo = require('../server/model/mongoModel.js');
+  });
+
+  afterAll(() => {
+    mongo.connection.close();
+  });
+
+  test('read / write speeds', async (done) => {
     let totalWriteTime = 0;
     let totalReadTime = 0;
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000)
+    });
     for (var x = 0; x < loops; x++) {
       let location = faker.address.city();
       let timeWrite1 = new Date().getTime();
-      await mongo.addListing(createData(location));
+      await mongo.addListing(Object.assign({id: 10000001 + x}, createData(location)));
       let timeWrite2 = new Date().getTime();
       totalWriteTime += (timeWrite2 - timeWrite1) / 1000;
       // console.log('Time to write data:', (timeWrite2 - timeWrite1) / 1000)
@@ -74,13 +86,41 @@ describe('Test MongoDB', () => {
     expect(response.city).toEqual('Port Amanistad');
     console.log('Average Write Speed Mongo:', totalWriteTime / loops);
     console.log('Average Read Speed Mongo:', totalReadTime / loops);
-    mongo.connection.close();
-  }, 10000);
+    done();
+  }, 100000);
+
+  test('read speeds', async (done) => {
+    let totalReadTime = 0;
+    for (var x = 0; x < loops; x++) {
+      let id = Math.ceil(Math.random() * 1000000) + 9000000;
+      // let id = Math.ceil(Math.random() * 10000000);
+      // let id = 10000000;
+      // let id = 1;
+      let timeRead1 = new Date().getTime();
+      let response;
+      await mongo.getListing(id).then((results) => {
+        response = results;
+      });
+      let timeRead2 = new Date().getTime();
+      totalReadTime += (timeRead2 - timeRead1) / 1000;
+      // console.log('Time to read data:', (timeRead2 - timeRead1) / 1000)
+      expect(response.id).toEqual(id);
+    }
+    console.log('Average Read Speed Mongo:', totalReadTime / loops);
+    done();
+  }, 100000);
 });
 
 describe('Test Postgres', () => {
-  test('read / write speeds', async () => {
-    const postgres = require('../server/model/postgresModel.js');
+  beforeAll(() => {
+    postgres = require('../server/model/postgresModel.js');
+  });
+
+  afterAll(() => {
+    postgres.connection.destroy();
+  });
+
+  test('read / write speeds', async (done) => {
     let totalWriteTime = 0;
     let totalReadTime = 0;
     for (var x = 0; x < loops; x++) {
@@ -109,6 +149,28 @@ describe('Test Postgres', () => {
     expect(response.city).toEqual('Port Amanistad');
     console.log('Average Write Speed Postgres:', totalWriteTime / loops);
     console.log('Average Read Speed Postgres:', totalReadTime / loops);
-    postgres.connection.destroy();
-  }, 10000);
+    done();
+  }, 100000);
+
+  test('read speeds', async (done) => {
+    let totalReadTime = 0;
+    for (var x = 0; x < loops; x++) {
+      let id = Math.ceil(Math.random() * 1000000) + 9000000;
+      // let id = Math.ceil(Math.random() * 10000000);
+      // let id = 10000000;
+      // let id = 1;
+      let timeRead1 = new Date().getTime();
+      let response;
+      await postgres.getListing(id).then((results) => {
+        response = results;
+      });
+      let timeRead2 = new Date().getTime();
+      totalReadTime += (timeRead2 - timeRead1) / 1000;
+      // console.log('Time to read data:', (timeRead2 - timeRead1) / 1000)
+      expect(response.id).toEqual(id);
+    }
+    console.log('Average Random Read Speed Postgres:', totalReadTime / loops);
+    expect(totalReadTime / loops).toBeLessThan(0.050);
+    done();
+  }, 1000000);
 });

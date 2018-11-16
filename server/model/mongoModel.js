@@ -3,13 +3,15 @@ const db = model.Listing;
 const connection = model.Connection;
 
 const getListing = (id) => {
-  return db.findOne({id: id})
+  return connection.db.collection('listings').find({id: id}).toArray().then((r) => r[0])
+  // return db.findOne({id: id})
     .catch((err) => console.log(err));
 };
 
 const addListing = (data) => {
-  let listing = new db(data)
-  return listing.save()
+  // let listing = new db(data)
+  // return listing.save()
+  return connection.db.collection('listings').insert(data)
     .catch((err) => console.log(err));
 };
 
