@@ -25,3 +25,5 @@ CREATE TABLE topbunk.listings (
 \copy topbunk.listings (id, room_type, username, room_details, city, city_details, listing_details, guest_access, interaction, other, avatar, num_guests, num_bedrooms, num_beds, num_baths) from 'data.csv' with delimiter as E'\t' CSV;
 
 ALTER TABLE topbunk.listings ADD PRIMARY KEY (id);
+
+ALTER SEQUENCE topbunk.listings_id_seq RESTART 10000001;

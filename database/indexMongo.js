@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const Promise = require('bluebird');
 const autoinc = require('mongoose-sequence')(mongoose);
+mongoose.Promise = Promise;
 
 mongoose.connect('mongodb://localhost:27017/topbunk');
 
@@ -23,4 +25,4 @@ listingSchema.plugin(autoinc, {inc_field: 'id', id: 'listings'});
 
 let Listing = mongoose.model('listing', listingSchema);
 
-module.exports = Listing;
+module.exports = {Listing: Listing, Connection: mongoose.connection};
