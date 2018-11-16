@@ -59,8 +59,8 @@ const writeStream = (writer, len) => {
 writeStream(stream, 20000);
 
 module.exports = {
-  paragraphs: paragraphs,
-  randomize: randomize,
-  createListing: createListing,
-  roomType: roomType
+  paragraphs,
+  randomize,
+  createListing,
+  roomType
 };
