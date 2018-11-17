@@ -9,7 +9,8 @@
     "build-csv": "node ./database/build.js",
     "seed-postgres": "psql topbunk < ./database/postgresSchema.sql",
     "seed-mongo": "./database/mongoInit.sh",
-    "test": "jest ./test/test.js"
+    "test": "jest ./spec/test.js",
+    "stress-test": "artillery run ./spec/stressTest.yml"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "artillery": "^1.6.0-25",
     "axios": "^0.18.0",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
@@ -40,7 +42,9 @@
     "module-example": "^1.0.0",
     "mongoose": "^5.3.10",
     "mongoose-sequence": "^4.0.1",
+    "morgan": "^1.9.1",
     "mysql": "^2.13.0",
+    "newrelic": "^4.11.0",
     "pg": "^7.6.1",
     "puppeteer": "^1.9.0",
     "react": "^15.4.2",
