@@ -1,0 +1,23 @@
+config:
+  target: "http://localhost:7000"
+  processor: "./idMaker.js"
+  phases:
+    - duration: 20
+      arrivalRate: 10
+      rampTo: 100
+      name: "warm up"
+    - duration: 10
+      arrivalRate: 100
+      name: "sustained"
+  defaults:
+    headers:
+      x-my-service-auth: "987401838271002188298567"
+scenarios:
+  - name: "visit page"
+    flow:
+      - loop:
+        - function: "generateId"
+        - get:
+            url: "/description?id={{ id }}"
+        count: 10
+        
