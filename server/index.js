@@ -2,15 +2,15 @@ require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const model = require('./model/postgresModel.js');
-// const model = require('./model/mongoModel.js');
+// const model = require('./model/postgresModel.js');
+const model = require('./model/mongoModel.js');
 const path = require('path');
 const port = process.env.PORT || 7000;
 
 const app = express();
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 app.all('/*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -62,7 +62,7 @@ app.delete('/description', function(req, res) {
 		});
 });
 
-app.get('/listing', function(req, res) {
+app.get('/listings', function(req, res) {
   res.sendFile(path.join(__dirname, '/../react-client/dist/index.html'));
 });
 

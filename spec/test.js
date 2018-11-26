@@ -63,7 +63,7 @@ describe('Test MongoDB', () => {
     for (var x = 0; x < loops; x++) {
       let location = faker.address.city();
       let timeWrite1 = new Date().getTime();
-      await mongo.addListing(Object.assign({id: 10000001 + x}, createData(location)));
+      await mongo.addListing(createData(location));
       let timeWrite2 = new Date().getTime();
       totalWriteTime += (timeWrite2 - timeWrite1) / 1000;
       // console.log('Time to write data:', (timeWrite2 - timeWrite1) / 1000)

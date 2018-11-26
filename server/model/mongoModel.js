@@ -13,7 +13,12 @@ const getListing = (id) => {
 const addListing = (data) => {
   // let listing = new db(data)
   // return listing.save()
-  return connection.db.collection('listings').insert(data)
+  let id;
+  return connection.db.collection('counters').find({id: 'listings'}).toArray().then((results) => {
+    id = results[0].seq + 1;
+    connection.db.collection('counters').update({}, {$set: {seq: id}})
+    return connection.db.collection('listings').insert(Object.assign(data, {id: id}))
+  })
     .catch((err) => console.log(err));
 };
 

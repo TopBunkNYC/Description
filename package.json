@@ -61,9 +61,6 @@
   },
   "homepage": "https://github.com/TopBunkNYC/Description#readme",
   "jest": {
-    "roots": [
-      "test/"
-    ],
     "preset": "jest-puppeteer"
   }
 }
