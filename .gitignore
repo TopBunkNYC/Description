@@ -1,7 +1,5 @@
 node_modules
 package-lock.json
 data.csv
-data2.csv
-data3.csv
 newrelic.js
 newrelic_agent.log
