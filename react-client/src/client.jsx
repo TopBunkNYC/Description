@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Listing from './components/Listing.jsx';
 
@@ -7,15 +6,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      listing: {}
+      listing: this.props || {}
     }
   }
 
-  componentDidMount() {   
-    const port = process.env.PORT || 7000;
-    var ID = window.location.href.split('?')[1].slice(3);
-    
-    if(!(window.location.href === `http://localhost:${port}/listings`) ){
+  componentDidMount() {
+    if (Object.keys(this.state.listing)[0] === undefined) {
+      var ID = window.location.href.split('?')[1].slice(3);
       axios.get('/description', {
         params: {
           id: ID
