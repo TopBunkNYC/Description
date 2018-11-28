@@ -1,6 +1,10 @@
 require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
+const axios = require('axios');
+const React = require('react');
+const ReactDom = require('react-dom/server');
+const application = require('../react-client/dist/bundle-server.js').default;
 const morgan = require('morgan');
 // const model = require('./model/postgresModel.js');
 const model = require('./model/mongoModel.js');
@@ -62,8 +66,55 @@ app.delete('/description', function(req, res) {
 		});
 });
 
+const ssr = (id) => {
+  return model.getListing(Number(id))
+		.then((data) => {
+			props = data;
+    	let component = React.createElement(application, props);
+			html = ReactDom.renderToString(component);
+			return [html, JSON.stringify(props)];
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+};
+
 app.get('/listings', function(req, res) {
-  res.sendFile(path.join(__dirname, '/../react-client/dist/index.html'));
+  ssr(req.query.id)
+		.then((results) => {
+			res.end(`
+				<!DOCTYPE html>
+				<html>
+				<head>
+          <title>Description</title>
+          <link rel="icon" type="image/png" href="https://s3.us-east-2.amazonaws.com/topbunk-profilephotos/favicon.ico">
+				</head>
+				<body>
+					<div id="description">${results[0]}</div>
+					<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+					<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+					<script type="text/javascript" src="/bundle.js"></script>
+					<script>
+						ReactDOM.hydrate(
+							React.createElement(Description, ${results[1]}),
+							document.getElementById('description')
+						);
+					</script>
+				</body>
+				</html>
+  		`);
+		});
+});
+
+app.get('/renderDescription', (req, res) => {
+	ssr(req.query.id)
+		.then((results) => {
+			res.send(results);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send();
+		});
 });
 
 app.listen(port, function() {
