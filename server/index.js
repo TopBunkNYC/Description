@@ -1,18 +1,15 @@
-require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
 const React = require('react');
 const ReactDom = require('react-dom/server');
 const application = require('../react-client/dist/bundle-server.js').default;
-const morgan = require('morgan');
 // const model = require('./model/postgresModel.js');
 const model = require('./model/mongoModel.js');
 const path = require('path');
 const port = process.env.PORT || 7000;
 
 const app = express();
-app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(express.static(path.join(__dirname, '../react-client/dist')));
 app.use(bodyParser.json());
 // app.use(morgan('dev'));
 
@@ -67,12 +64,16 @@ app.delete('/description', function(req, res) {
 });
 
 const ssr = (id) => {
-  return model.getListing(Number(id))
+  return model.getListing(id)
 		.then((data) => {
-			props = data;
-    	let component = React.createElement(application, props);
-			html = ReactDom.renderToString(component);
-			return [html, JSON.stringify(props)];
+			if (data && data.id === id) {
+				props = data;
+				let component = React.createElement(application, props);
+				html = ReactDom.renderToString(component);
+				return {ssr_html: html, props: JSON.stringify(props), success: true};
+			} else {
+				return {success: false};
+			}
 		})
 		.catch((err) => {
 			console.log(err);
@@ -80,34 +81,38 @@ const ssr = (id) => {
 };
 
 app.get('/listings', function(req, res) {
-  ssr(req.query.id)
+  ssr(Number(req.query.id))
 		.then((results) => {
-			res.end(`
-				<!DOCTYPE html>
-				<html>
-				<head>
-          <title>Description</title>
-          <link rel="icon" type="image/png" href="https://s3.us-east-2.amazonaws.com/topbunk-profilephotos/favicon.ico">
-				</head>
-				<body>
-					<div id="description">${results[0]}</div>
-					<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-					<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-					<script type="text/javascript" src="/bundle.js"></script>
-					<script>
-						ReactDOM.hydrate(
-							React.createElement(Description, ${results[1]}),
-							document.getElementById('description')
-						);
-					</script>
-				</body>
-				</html>
-  		`);
+			if (results.success === false) {
+				res.status(404).send();
+			} else {
+				res.end(`
+					<!DOCTYPE html>
+					<html>
+					<head>
+						<title>Description</title>
+						<link rel="icon" type="image/png" href="https://s3.us-east-2.amazonaws.com/topbunk-profilephotos/favicon.ico">
+					</head>
+					<body>
+						<div id="description">${results.ssr_html}</div>
+						<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+						<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+						<script type="text/javascript" src="/bundle.js"></script>
+						<script>
+							ReactDOM.hydrate(
+								React.createElement(Description, ${results.props}),
+								document.getElementById('description')
+							);
+						</script>
+					</body>
+					</html>
+				`);
+			}
 		});
 });
 
 app.get('/renderDescription', (req, res) => {
-	ssr(req.query.id)
+	ssr(Number(req.query.id))
 		.then((results) => {
 			res.send(results);
 		})
@@ -115,6 +120,12 @@ app.get('/renderDescription', (req, res) => {
 			console.log(err);
 			res.status(500).send();
 		});
+});
+
+
+const loaderio = process.env.loaderio || require('../config.js').loader;
+app.get(`/loaderio-${loaderio}`, (req, res) => {
+	res.send(`loaderio-${loaderio}`);
 });
 
 app.listen(port, function() {

@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
-const autoinc = require('mongoose-sequence')(mongoose);
 mongoose.Promise = Promise;
 
-mongoose.connect('mongodb://localhost:27017/topbunk');
+// // local database
+// mongoose.connect('mongodb://localhost:27017/topbunk', {poolSize: 10, autoIndex: false});
+
+// deployed database
+mongoose.connect(`mongodb://${process.env.mongoURL || require('../config.js').mongoURL}:27017/topbunk`, {poolSize: 10, autoIndex: false});
 
 let listingSchema = mongoose.Schema({
 	room_type: String,
@@ -21,7 +24,6 @@ let listingSchema = mongoose.Schema({
 	num_beds: Number,
 	num_baths: Number
 });
-listingSchema.plugin(autoinc, {inc_field: 'id', id: 'listings'});
 
 let Listing = mongoose.model('listing', listingSchema);
 

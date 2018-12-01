@@ -15,10 +15,6 @@ const createListing = (location) => {
   return `${randomize(adj)} ${randomize(noun)} ${randomize(area)} ${location}`;
 };
 
-const paragraphs = () => {
-  return faker.lorem.paragraph() + ' ' + faker.lorem.paragraph();
-};
-
 // csv builder
 
 var stream = fs.createWriteStream('data.csv');
@@ -29,7 +25,7 @@ const createData = (length) => {
   for (let x = 0; x < length; x++) {
     const location = faker.address.city();
     arr.push(
-      `${index}\t${randomize(roomType)}\t${faker.name.findName()}\t${createListing(location)}\t${location}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${paragraphs()}\t${faker.image.avatar()}\t${randomize([1, 2, 3, 4, 5, 6, 7, 8])}\t${randomize([1, 2, 3])}\t${randomize([1, 2, 3, 4, 5, 6])}\t${randomize([1, 2])}`
+      `${index}\t${randomize(roomType)}\t${faker.name.findName()}\t${createListing(location)}\t${location}\t${faker.lorem.paragraph()}\t${faker.lorem.paragraph()}\t${faker.lorem.paragraph()}\t${faker.lorem.paragraph()}\t${faker.lorem.paragraph()}\t${faker.image.avatar()}\t${randomize([1, 2, 3, 4, 5, 6, 7, 8])}\t${randomize([1, 2, 3])}\t${randomize([1, 2, 3, 4, 5, 6])}\t${randomize([1, 2])}`
     );
     index++;
   }
@@ -59,7 +55,6 @@ const writeStream = (writer, len) => {
 writeStream(stream, 20000);
 
 module.exports = {
-  paragraphs,
   randomize,
   createListing,
   roomType
