@@ -9,7 +9,7 @@ const TEXT_COLLAPSE_OPTIONS = {
   collapseText: 'Read more about the space',
   expandText: 'Hide',
   minHeight: 10,
-  maxHeight: 820,
+  maxHeight: 480,
   textStyle: {
     color: "#008489",
     fontSize: '16px',
@@ -125,15 +125,11 @@ class Listing extends React.Component {
 
 const styles = {
   container: {
-  	paddingLeft: 24,
-  	marginLeft: -8,
-  	marginRight: -8,
   	width: 664, 
   	backgroundColor: "FFFFFF",
   	lineHeight: 1.43,
   	borderWidth: 1,
   	fontFamily: "'Roboto', sans-serif",
-  	marginLeft: 94.500,
     border: "0px 0px 1px 0px solid #EBEBEB"
   },roomType: {
   	fontSize: 12,

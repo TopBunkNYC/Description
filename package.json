@@ -4,7 +4,7 @@
   "description": "Airbnb Listing Clone - Description Component",
   "main": "index.js",
   "scripts": {
-    "react-dev": "webpack -d --watch",
+    "react-dev": "webpack -p -d --watch",
     "server-dev": "nodemon server/index.js",
     "build-csv": "node ./database/build.js",
     "seed-postgres": "psql topbunk < ./database/postgresSchema.sql",

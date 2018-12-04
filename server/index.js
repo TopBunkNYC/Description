@@ -92,12 +92,13 @@ app.get('/listings', function(req, res) {
 					<head>
 						<title>Description</title>
 						<link rel="icon" type="image/png" href="https://s3.us-east-2.amazonaws.com/topbunk-profilephotos/favicon.ico">
+						<link rel="stylesheet" type="text/css" href="/styles.css">
 					</head>
 					<body>
 						<div id="description">${results.ssr_html}</div>
 						<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
 						<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-						<script type="text/javascript" src="/bundle.js"></script>
+						<script type="text/javascript" src="https://s3.amazonaws.com/topbunk-nyc-description/bundle.js"></script>
 						<script>
 							ReactDOM.hydrate(
 								React.createElement(Description, ${results.props}),
