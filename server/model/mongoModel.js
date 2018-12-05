@@ -6,13 +6,10 @@ const getListing = (id) => {
   return connection.db.collection('listings').find({id: id}).toArray().then((results) => {
     return results[0]
   })
-  // return db.findOne({id: id})
     .catch((err) => console.log(err));
 };
 
 const addListing = (data) => {
-  // let listing = new db(data)
-  // return listing.save()
   let id;
   return connection.db.collection('counters').find({id: 'listings'}).toArray().then((results) => {
     id = results[0].seq + 1;

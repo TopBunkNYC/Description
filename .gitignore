@@ -1,5 +1,5 @@
 node_modules
 package-lock.json
 data.csv
-newrelic.js
-newrelic_agent.log
+config.js
+*.DS_Store

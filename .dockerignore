@@ -1,0 +1,11 @@
+data.csv
+config.js
+/database
+!/database/indexMongo.js
+/react-client/src
+/react-client/dist/bundle.js
+/server/model/postgresModel.js
+/spec
+README.md
+webpack.config.js
+.gitignore
