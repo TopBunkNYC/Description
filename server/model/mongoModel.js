@@ -6,20 +6,10 @@ const getListing = (id) => {
   return connection.db.collection('listings').find({id: id}).toArray().then((results) => {
     return results[0]
   })
-  // return new Promise((resolve, reject) => {
-  //   let cursor = connection.db.collection('listings').find({id: id});
-  //   let results;
-  //   cursor.on('data', (doc) => {
-  //     resolve(doc);
-  //   });
-  // })
-  // return db.findOne({id: id})
     .catch((err) => console.log(err));
 };
 
 const addListing = (data) => {
-  // let listing = new db(data)
-  // return listing.save()
   let id;
   return connection.db.collection('counters').find({id: 'listings'}).toArray().then((results) => {
     id = results[0].seq + 1;
