@@ -77,7 +77,7 @@ id: Hostel id
 }
 ```
     
-###POST /description
+### POST /description
 Will add listing description information
 
 ```sh
@@ -100,7 +100,7 @@ num_baths: 'Number of baths at the hostel'
 # Note: The hostel id will be automatically generated for your listing
 ```
 
-###DELETE /description
+### DELETE /description
 Will delete listing description information for queried hostel id
 
 ```sh
@@ -108,7 +108,7 @@ Will delete listing description information for queried hostel id
 id: 'Hostel id'
 ```
     
-###PUT /description
+### PUT /description
 Will updated listing description information for hostel id
 
 ```sh
@@ -127,5 +127,5 @@ avatar: 'URL to avatar image',
 num_guests: 'Number of guests that the hostel accomodates',
 num_bedrooms: 'Number of bedrooms at the hostel',
 num_beds: 'Number of beds at the hostel',
-num_baths: 'Number of baths at the hostel',
+num_baths: 'Number of baths at the hostel'
 ```
