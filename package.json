@@ -7,6 +7,7 @@
     "react-dev": "webpack -d --watch",
     "react-prod": "webpack -p",
     "server-dev": "nodemon server/index.js",
+    "start": "node server/index.js",
     "build-csv": "node ./database/build.js",
     "seed-postgres": "psql topbunk < ./database/postgresSchema.sql",
     "seed-mongo": "./database/mongoInit.sh",
@@ -17,7 +18,10 @@
     "type": "git",
     "url": "git+https://github.com/TopBunkNYC/Description.git"
   },
-  "author": "",
+  "author": "DHP",
+  "contributors": [
+    "MLJ"
+  ],
   "license": "ISC",
   "devDependencies": {
     "jest": "^23.6.0",
