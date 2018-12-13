@@ -1,7 +1,7 @@
 # Description Component
 This component displays the description of each listing in the TopBunk application.
 
-Follow this link to see the deployed microservice, which accepts id's from 0 to 10M: http://54.210.228.216/listings?id=12345
+Follow this link to see the deployed microservice, which accepts id's from 1 to 10M: http://54.210.228.216/listings?id=12345
 
 ## Related Projectts
 
